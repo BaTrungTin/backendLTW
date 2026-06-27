@@ -36,8 +36,7 @@ $router->get('/category/:slug', [CategoryController::class, 'list'], $client);
 $router->get('/search', [SearchController::class, 'list'], $client);
 $router->post('/order/create', [OrderController::class, 'createPost'], $client);
 $router->get('/order/success', [OrderController::class, 'success'], $client);
-$router->get('/order/payment-zalopay', [OrderController::class, 'paymentZaloPay'], $client);
-$router->post('/order/payment-zalopay-result', [OrderController::class, 'paymentZaloPayResultPost'], $client);
+
 $router->get('/order/payment-vnpay', [OrderController::class, 'paymentVNPay'], $client);
 $router->get('/order/payment-vnpay-result', [OrderController::class, 'paymentVNPayResult'], $client);
 

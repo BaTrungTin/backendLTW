@@ -19,7 +19,6 @@ return [
         ['label' => 'Chuyển khoản', 'value' => 'bank'],
         ['label' => 'Ví momo', 'value' => 'momo'],
         ['label' => 'VNPay', 'value' => 'vnpay'],
-        ['label' => 'Zalo Pay', 'value' => 'zalopay'],
     ],
     'payment_status_list' => [
         ['label' => 'Chưa thanh toán', 'value' => 'unpaid'],
