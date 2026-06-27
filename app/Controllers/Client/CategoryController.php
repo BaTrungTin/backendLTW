@@ -37,10 +37,9 @@ class CategoryController
 
         $child = CategoryHelper::getCategoryChild($categoryDetail['id']);
         $ids = array_merge([$categoryDetail['id']], array_column($child, 'id'));
-        $tourList = TourHelper::enrichTourList(Tour::find(
-            ['category' => ['$in' => $ids], 'deleted' => false, 'status' => 'active'],
-            ['sort' => ['position' => 'desc']]
-        ));
+        $query = $request->query();
+        $query['categoryIds'] = $ids;
+        $tourList = TourHelper::enrichTourList(Tour::search($query));
 
         View::render('client/pages/tour-list', [
             'pageTitle' => 'Danh sách tour',

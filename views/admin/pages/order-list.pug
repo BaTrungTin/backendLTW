@@ -19,16 +19,16 @@ block main
                 span -
                 input(type="date" filter-end-date) 
             .inner-item     
-                select 
+                select(filter-payment-method) 
                     option(value="") Phương thức thanh toán
-                    option(value="") Tiền mặt
-                    option(value="") VNPay
-                    option(value="") Chuyển khoản
+                    option(value="money") Tiền mặt
+                    option(value="vnpay") VNPay
+                    option(value="bank") Chuyển khoản
             .inner-item     
-                select 
+                select(filter-payment-status) 
                     option(value="") Trạng thái thanh toán
-                    option(value="") Chưa thanh toán
-                    option(value="") Đã thanh toán
+                    option(value="unpaid") Chưa thanh toán
+                    option(value="paid") Đã thanh toán
             .inner-item.inner-reset(filter-reset)
                 <i class="fa-solid fa-rotate-left"></i> Xóa bộ lọc
     //- End Section 4

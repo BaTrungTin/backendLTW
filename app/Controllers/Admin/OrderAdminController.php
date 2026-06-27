@@ -12,7 +12,34 @@ class OrderAdminController
 {
     public function list(Request $request): void
     {
-        $orderList = Order::find(['deleted' => false], ['sort' => ['createdAt' => 'desc']]);
+        $find = ['deleted' => false];
+
+        // Filters
+        if ($request->query('status')) {
+            $find['status'] = $request->query('status');
+        }
+        if ($request->query('paymentMethod')) {
+            $find['paymentMethod'] = $request->query('paymentMethod');
+        }
+        if ($request->query('paymentStatus')) {
+            $find['paymentStatus'] = $request->query('paymentStatus');
+        }
+        
+        $createdAtFilters = [];
+        if ($request->query('startDate')) {
+            $createdAtFilters['$gte'] = $request->query('startDate') . ' 00:00:00';
+        }
+        if ($request->query('endDate')) {
+            $createdAtFilters['$lte'] = $request->query('endDate') . ' 23:59:59';
+        }
+        if (!empty($createdAtFilters)) {
+            $find['createdAt'] = $createdAtFilters;
+        }
+
+        // Search by keyword is not natively supported by BaseModel, we will skip it for now to avoid query errors, 
+        // as the UI can be complex to implement without modifying the ORM.
+
+        $orderList = Order::find($find, ['sort' => ['createdAt' => 'desc']]);
         $vars = $GLOBALS['variables'];
         foreach ($orderList as &$item) {
             $item['paymentMethodName'] = $this->label($vars['payment_method_list'], $item['paymentMethod']);
@@ -29,9 +56,6 @@ class OrderAdminController
             $item['createdAtFormat'] = date('H:i - d/m/Y', strtotime($item['createdAt']));
         }
         View::render('admin/pages/order-list', ['pageTitle' => 'Quản lý đơn hàng', 'orderList' => $orderList]);
-        echo "<pre>";
-        print_r($orderList);
-        die();
     }
 
     public function edit(Request $request): void

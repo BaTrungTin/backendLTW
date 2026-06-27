@@ -75,7 +75,11 @@ class TourAdminController
         }
         $body = $_POST;
         $data = $this->parseTourBody($body);
-        $data['slug'] = StrHelper::slugify($data['name']);
+        $slug = StrHelper::slugify($data['name']);
+        if (Tour::findOne(['slug' => $slug])) {
+            $slug .= '-' . time();
+        }
+        $data['slug'] = $slug;
         $data['createdBy'] = $request->account->id;
         $data['updatedBy'] = $request->account->id;
         if ($path = UploadHelper::fromRequest('avatar')) {
@@ -116,7 +120,12 @@ class TourAdminController
         $body = $_POST;
         $data = $this->parseTourBody($body);
         if (!empty($data['name'])) {
-            $data['slug'] = StrHelper::slugify($data['name']);
+            $slug = StrHelper::slugify($data['name']);
+            $exist = Tour::findOne(['slug' => $slug]);
+            if ($exist && $exist['id'] != $request->params['id']) {
+                $slug .= '-' . time();
+            }
+            $data['slug'] = $slug;
         }
         $data['updatedBy'] = $request->account->id;
         if ($path = UploadHelper::fromRequest('avatar')) {

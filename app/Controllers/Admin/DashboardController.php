@@ -13,10 +13,16 @@ class DashboardController
     public function dashboard(Request $request): void
     {
         $orders = Order::find(['deleted' => false]);
+        $totalRevenue = 0;
+        foreach ($orders as $order) {
+            if ($order['status'] !== 'cancel') {
+                $totalRevenue += $order['total'];
+            }
+        }
         $overview = [
             'totalAdmin' => AccountAdmin::count(['deleted' => false]),
             'totalOrder' => count($orders),
-            'totalRevenue' => array_sum(array_column($orders, 'total')),
+            'totalRevenue' => $totalRevenue,
         ];
         View::render('admin/pages/dashboard', ['pageTitle' => 'Tổng quan', 'overview' => $overview]);
     }
@@ -48,14 +54,14 @@ class DashboardController
         foreach ($arrayDay as $day) {
             $revC = 0;
             foreach ($current as $order) {
-                if ((int) date('j', strtotime($order['createdAt'])) == (int) $day) {
+                if ($order['status'] !== 'cancel' && (int) date('j', strtotime($order['createdAt'])) == (int) $day) {
                     $revC += $order['total'];
                 }
             }
             $dataCurrentMonth[] = $revC;
             $revP = 0;
             foreach ($prev as $order) {
-                if ((int) date('j', strtotime($order['createdAt'])) == (int) $day) {
+                if ($order['status'] !== 'cancel' && (int) date('j', strtotime($order['createdAt'])) == (int) $day) {
                     $revP += $order['total'];
                 }
             }
