@@ -416,10 +416,7 @@ if (orderForm) {
                                     // Chuyển sang trang đặt hàng thành công 
                                     window.location.href = `/order/success?orderCode=${data.orderCode}&phone=${data.phone}`;
                                     break;
-                                case "zalopay":
-                                    // Chuyển sang trang thanh toán bằng zalopay 
-                                    window.location.href = `/order/payment-zalopay?orderCode=${data.orderCode}&phone=${data.phone}`;
-                                    break;
+
                                 case "vnpay":
                                     // Chuyển sang trang thanh toán bằng vnpay 
                                     window.location.href = `/order/payment-vnpay?orderCode=${data.orderCode}&phone=${data.phone}`;
