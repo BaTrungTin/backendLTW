@@ -78,6 +78,7 @@ $router->patch("{$pa}/tour/change-multi", [TourAdminController::class, 'changeMu
 $router->get("{$pa}/order/list", [OrderAdminController::class, 'list'], $auth);
 $router->get("{$pa}/order/edit/:id", [OrderAdminController::class, 'edit'], $auth);
 $router->patch("{$pa}/order/edit/:id", [OrderAdminController::class, 'editPatch'], $auth);
+$router->patch("{$pa}/order/delete/:id", [OrderAdminController::class, 'deletePatch'], $auth);
 
 $router->get("{$pa}/user/list", [UserController::class, 'list'], $auth);
 $router->get("{$pa}/contact/list", [AdminContactController::class, 'list'], $auth);

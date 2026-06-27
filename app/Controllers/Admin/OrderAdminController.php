@@ -53,7 +53,10 @@ class OrderAdminController
                     default => 'yellow'
                 }
             ];
-            $item['createdAtFormat'] = date('H:i - d/m/Y', strtotime($item['createdAt']));
+            
+            $item['createdAtTime'] = date('H:i', strtotime($item['createdAt']));
+
+            $item['createdAtDate'] = date('d/m/Y', strtotime($item['createdAt']));
         }
         View::render('admin/pages/order-list', ['pageTitle' => 'Quản lý đơn hàng', 'orderList' => $orderList]);
     }
@@ -63,7 +66,6 @@ class OrderAdminController
         $vars = $GLOBALS['variables'];
         $orderDetail = Order::findOne(['id' => $request->params['id'], 'deleted' => false]);
         
-
         if (!$orderDetail) {
             Response::redirect('/' . $GLOBALS['pathAdmin'] . '/order/list');
             return;
@@ -74,12 +76,12 @@ class OrderAdminController
             strtotime($orderDetail['createdAt'])
         );
 
-
-
         foreach ($orderDetail['items'] as &$item) {
             $city = City::findOne(['id' => $item['locationFrom'] ?? 0]);
             $item['cityName'] = $city['name'] ?? '';
         }
+
+        
 
         View::render('admin/pages/order-edit', [
             'pageTitle' => 'Chi tiết đơn hàng',
@@ -106,4 +108,23 @@ class OrderAdminController
         }
         return $value;
     }
+
+    public function deletePatch(Request $request): void
+    {
+        Order::updateOne(
+            ['id' => $request->params['id']],
+            [
+                'deleted'   => true,
+                'deletedAt' => date('Y-m-d H:i:s'),
+                'deletedBy' => $request->account->id
+            ]
+        );
+
+        Response::json([
+            'code' => 'success',
+            'message' => 'Xóa đơn hàng thành công!'
+        ]);
+    }
 }
+
+

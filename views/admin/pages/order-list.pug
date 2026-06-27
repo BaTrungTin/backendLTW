@@ -93,8 +93,12 @@ block main
                                 .inner-buttons
                                         a(href=`/${pathAdmin}/order/edit/${orderDetail.id}` class="inner-edit")
                                             <i class="fa-regular fa-pen-to-square"></i>
-                                        button(class="inner-delete") 
-                                            <i class="fa-regular fa-trash-can"></i>
+                                        button(
+                                            class="inner-delete"
+                                            button-delete
+                                            data-api=`/${pathAdmin}/order/delete/${orderDetail.id}`
+                                        )
+                                            i.fa-regular.fa-trash-can
     //- End Section 6
 
     //- Section 7
