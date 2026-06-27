@@ -31,6 +31,15 @@ class SettingController
     public function websiteInfoPatch(Request $request): void
     {
         $body = $_POST;
+
+        if (empty($body['categoryIdSection4'])) {
+            unset($body['categoryIdSection4']);
+        }
+
+        if (empty($body['categoryIdSection6'])) {
+            unset($body['categoryIdSection6']);
+        }
+        
         if ($logo = UploadHelper::fromRequest('logo')) {
             $body['logo'] = $logo;
         }
