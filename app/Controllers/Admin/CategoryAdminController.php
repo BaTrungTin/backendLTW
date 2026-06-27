@@ -67,11 +67,18 @@ class CategoryAdminController
     public function createPost(Request $request): void
     {
         $body = $request->body();
-        $body['slug'] = StrHelper::slugify($body['name']);
+        $slug = StrHelper::slugify($body['name']);
+        if (Category::findOne(['slug' => $slug])) {
+            $slug .= '-' . time();
+        }
+        $body['slug'] = $slug;
         $body['position'] = (int) ($body['position'] ?? Category::count([]) + 1);
         $body['parent'] = !empty($body['parent']) ? (int) $body['parent'] : null;
         $body['createdBy'] = $request->account->id;
         $body['updatedBy'] = $request->account->id;
+        if (isset($body['avatar']) && in_array($body['avatar'], ['null', 'undefined', ''], true)) {
+            unset($body['avatar']);
+        }
         if ($path = UploadHelper::fromRequest('avatar')) {
             $body['avatar'] = $path;
         }
@@ -97,12 +104,20 @@ class CategoryAdminController
     {
         $body = $request->body();
         if (!empty($body['name'])) {
-            $body['slug'] = StrHelper::slugify($body['name']);
+            $slug = StrHelper::slugify($body['name']);
+            $exist = Category::findOne(['slug' => $slug]);
+            if ($exist && $exist['id'] != $request->params['id']) {
+                $slug .= '-' . time();
+            }
+            $body['slug'] = $slug;
         }
         if (array_key_exists('parent', $body)) {
             $body['parent'] = !empty($body['parent']) ? (int) $body['parent'] : null;
         }
         $body['updatedBy'] = $request->account->id;
+        if (isset($body['avatar']) && in_array($body['avatar'], ['null', 'undefined', ''], true)) {
+            unset($body['avatar']);
+        }
         if ($path = UploadHelper::fromRequest('avatar')) {
             $body['avatar'] = $path;
         }
@@ -112,11 +127,7 @@ class CategoryAdminController
 
     public function deletePatch(Request $request): void
     {
-        Category::updateOne(['id' => $request->params['id']], [
-            'deleted' => true,
-            'deletedAt' => date('Y-m-d H:i:s'),
-            'deletedBy' => $request->account->id,
-        ]);
+        Category::deleteOne(['id' => $request->params['id']]);
         Response::json(['code' => 'success', 'message' => 'Xoá danh mục thành công!']);
     }
 
@@ -126,7 +137,7 @@ class CategoryAdminController
         $ids = $request->input('ids', []);
         match ($value) {
             'active', 'inactive' => Category::updateByIds($ids, ['status' => $value]),
-            'delete' => Category::updateByIds($ids, ['deleted' => true, 'deletedAt' => date('Y-m-d H:i:s'), 'deletedBy' => $request->account->id]),
+            'delete' => Category::deleteByIds($ids),
             default => null,
         };
         Response::json(['code' => 'success', 'message' => 'Thành công!']);

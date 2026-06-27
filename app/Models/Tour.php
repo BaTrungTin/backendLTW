@@ -48,6 +48,14 @@ class Tour extends BaseModel
         $sql = 'SELECT * FROM tours WHERE deleted = 0 AND status = ?';
         $params = ['active'];
 
+        if (!empty($query['categoryIds']) && is_array($query['categoryIds'])) {
+            $placeholders = implode(',', array_fill(0, count($query['categoryIds']), '?'));
+            $sql .= ' AND category IN (' . $placeholders . ')';
+            foreach ($query['categoryIds'] as $v) {
+                $params[] = $v;
+            }
+        }
+
         if (!empty($query['locationFrom'])) {
             $sql .= ' AND JSON_CONTAINS(locations, ?, "$")';
             $params[] = json_encode((string) $query['locationFrom']);

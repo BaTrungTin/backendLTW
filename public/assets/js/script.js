@@ -450,7 +450,7 @@ if (orderForm) {
 // Box Filter
 const boxFilter = document.querySelector(".box-filter");
 if (boxFilter) {
-    const url = new URL(`${window.location.origin}/search`);
+    const url = new URL(window.location.href);
     const button = boxFilter.querySelector(".inner-button");
 
     const filterList = [
@@ -465,7 +465,7 @@ if (boxFilter) {
 
     button.addEventListener("click", () => {
         for (const item of filterList) {
-            const value = document.querySelector(`[name="${item}"]`).value;
+            const value = boxFilter.querySelector(`[name="${item}"]`).value;
             if (value) {
                 url.searchParams.set(item, value);
             } else {

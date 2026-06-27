@@ -311,7 +311,8 @@ if (categoryEditForm) {
           }
 
           if (data.code == "success") {
-            notify.success(data.message);
+            drawNotify(data.code, data.message);
+            window.location.href = `/${pathAdmin}/category/list`;
           }
         })
     })
@@ -1348,6 +1349,53 @@ if (filterEndDate) {
 }
 // End Filter End Date
 
+// Filter Payment Method
+const filterPaymentMethod = document.querySelector("[filter-payment-method]");
+if (filterPaymentMethod) {
+  const url = new URL(window.location.href);
+
+  filterPaymentMethod.addEventListener("change", () => {
+    const value = filterPaymentMethod.value;
+    if (value) {
+      url.searchParams.set("paymentMethod", value);
+    } else {
+      url.searchParams.delete("paymentMethod");
+    }
+    window.location.href = url.href;
+  })
+
+  // Hiển thị giá trị mặc định 
+  const valueCurrent = url.searchParams.get("paymentMethod");
+  if (valueCurrent) {
+    filterPaymentMethod.value = valueCurrent;
+  }
+}
+// End Filter Payment Method
+
+// Filter Payment Status
+const filterPaymentStatus = document.querySelector("[filter-payment-status]");
+if (filterPaymentStatus) {
+  const url = new URL(window.location.href);
+
+  filterPaymentStatus.addEventListener("change", () => {
+    const value = filterPaymentStatus.value;
+    if (value) {
+      url.searchParams.set("paymentStatus", value);
+    } else {
+      url.searchParams.delete("paymentStatus");
+    }
+    window.location.href = url.href;
+  })
+
+  // Hiển thị giá trị mặc định 
+  const valueCurrent = url.searchParams.get("paymentStatus");
+  if (valueCurrent) {
+    filterPaymentStatus.value = valueCurrent;
+  }
+}
+// End Filter Payment Status
+
+
 // Filter Reset 
 const filterReset = document.querySelector("[filter-reset]");
 if (filterReset) {
@@ -1356,7 +1404,9 @@ if (filterReset) {
     "status",
     "createdBy",
     "startDate",
-    "endDate"
+    "endDate",
+    "paymentMethod",
+    "paymentStatus"
   ];
 
   filterReset.addEventListener("click", () => {
