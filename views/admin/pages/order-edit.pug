@@ -36,7 +36,8 @@ block main
                             ) #{item.label}
             .inner-group 
                 label(class="inner-label") Ngày đặt
-                input(type="datetime-local" value=orderDetail.createdAtFormat readonly)
+                p= orderDetail.createdAtFormat
+                input(type="datetime-local" name="createdAt" value=orderDetail.createdAtFormat readonly)
             .inner-group 
                 label(for="status" class="inner-label") Trạng thái
                 select(id="status" name="status")

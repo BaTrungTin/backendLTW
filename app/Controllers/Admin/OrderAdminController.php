@@ -29,23 +29,41 @@ class OrderAdminController
             $item['createdAtFormat'] = date('H:i - d/m/Y', strtotime($item['createdAt']));
         }
         View::render('admin/pages/order-list', ['pageTitle' => 'Quản lý đơn hàng', 'orderList' => $orderList]);
+        echo "<pre>";
+        print_r($orderList);
+        die();
     }
 
     public function edit(Request $request): void
     {
+        $vars = $GLOBALS['variables'];
         $orderDetail = Order::findOne(['id' => $request->params['id'], 'deleted' => false]);
+        
+
         if (!$orderDetail) {
             Response::redirect('/' . $GLOBALS['pathAdmin'] . '/order/list');
             return;
         }
+
+        $orderDetail['createdAtFormat'] = date(
+            'Y-m-d\TH:i',
+            strtotime($orderDetail['createdAt'])
+        );
+
+
+
         foreach ($orderDetail['items'] as &$item) {
             $city = City::findOne(['id' => $item['locationFrom'] ?? 0]);
             $item['cityName'] = $city['name'] ?? '';
         }
+
         View::render('admin/pages/order-edit', [
             'pageTitle' => 'Chi tiết đơn hàng',
             'orderDetail' => $orderDetail,
             'cityList' => City::find([]),
+            'paymentMethodList' => $vars['payment_method_list'],
+            'paymentStatusList' => $vars['payment_status_list'],
+            'statusList' => $vars['status_list'],
         ]);
     }
 
