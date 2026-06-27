@@ -1,0 +1,15 @@
+mixin change-status(api, options)
+  - 
+    const optionList = options || [
+      { label: "Hoạt động", value: "active" },
+      { label: "Tạm dừng", value: "inactive" },
+      { label: "Xoá", value: "delete" },
+    ];
+  .inner-change-status(change-multi data-api=api)
+    .inner-item 
+        select
+            option(value="") -- Hành động -- 
+            each item in optionList 
+              option(value=item.value) #{item.label}
+    .inner-item
+        button Áp dụng

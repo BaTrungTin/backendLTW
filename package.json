@@ -1,0 +1,10 @@
+{
+  "name": "tour-php",
+  "version": "2.0.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Chỉ dùng package pug để PHP render view (scripts/render-pug.mjs)",
+  "dependencies": {
+    "pug": "^3.0.3"
+  }
+}
