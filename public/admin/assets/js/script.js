@@ -637,8 +637,8 @@ if (settingWebsiteInfoForm) {
       const phone = event.target.phone.value;
       const email = event.target.email.value;
       const address = event.target.address.value;
-      const logo = filePond.logo.getFile()?.file;
-      const favicon = filePond.favicon.getFile()?.file;
+      const logo = filePond.logo?.getFile()?.file;
+      const favicon = filePond.favicon?.getFile()?.file;
       const categoryIdSection4 = event.target.categoryIdSection4.value;
       const categoryIdSection6 = event.target.categoryIdSection6.value;
 
