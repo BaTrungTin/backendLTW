@@ -182,7 +182,8 @@ class TourAdminController
     private function parseTourBody(array $body): array
     {
         return [
-            'name' => trim($body['name'] ?? ''),
+            // [FIX] Làm sạch tên tour (bỏ \r\n) khi lưu — tránh slug lỗi
+            'name' => trim(preg_replace('/[\r\n\t]+/', ' ', $body['name'] ?? '')),
             'category' => $body['category'] ?? null,
             'position' => (int) ($body['position'] ?? Tour::count([]) + 1),
             'status' => $body['status'] ?? 'active',

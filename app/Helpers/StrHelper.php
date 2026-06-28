@@ -6,6 +6,8 @@ class StrHelper
 {
     public static function slugify(string $text): string
     {
+        // [FIX] Loại bỏ \r\n, tab trong tên tour trước khi tạo slug (tránh link chi tiết tour bị redirect về trang chủ)
+        $text = trim(preg_replace('/[\r\n\t]+/', ' ', $text));
         $charMap = [
             'à'=>'a', 'á'=>'a', 'ả'=>'a', 'ã'=>'a', 'ạ'=>'a',
             'ă'=>'a', 'ằ'=>'a', 'ắ'=>'a', 'ẳ'=>'a', 'ẵ'=>'a', 'ặ'=>'a',

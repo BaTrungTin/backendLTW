@@ -14,8 +14,10 @@ class TourController
 {
     public function detail(Request $request): void
     {
+        // [FIX] Chuẩn hóa slug từ URL trước khi tra cứu
+        $slug = trim(urldecode($request->params['slug'] ?? ''));
         $tourDetail = Tour::findOne([
-            'slug' => $request->params['slug'],
+            'slug' => $slug,
             'deleted' => false,
             'status' => 'active',
         ]);
