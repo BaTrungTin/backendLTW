@@ -600,7 +600,7 @@ if (boxTourDetail) {
     const tourId = buttonAddTourCart.getAttribute("tour-id");
 
     buttonAddTourCart.addEventListener("click", () => {
-        const locationFrom = boxTourDetail.querySelector(`[name="locationFrom"]`).value;
+        const locationFrom = boxTourDetail.querySelector(`[name="locationFrom"]`)?.value || "";
         const quantityAdult = parseInt(boxTourDetail.querySelector(`[name="quantityAdult"]`).value);
         const quantityChildren = parseInt(boxTourDetail.querySelector(`[name="quantityChildren"]`).value);
         const quantityBaby = parseInt(boxTourDetail.querySelector(`[name="quantityBaby"]`).value);
@@ -633,7 +633,10 @@ if (boxTourDetail) {
     const cart = JSON.parse(localStorage.getItem("cart"));
     const existItem = cart.find(item => item.tourId == tourId);
     if (existItem) {
-        boxTourDetail.querySelector(`[name="locationFrom"]`).value = existItem.locationFrom;
+        const locationFromElement = boxTourDetail.querySelector(`[name="locationFrom"]`);
+        if (locationFromElement) {
+            locationFromElement.value = existItem.locationFrom;
+        }
         boxTourDetail.querySelector(`[name="quantityAdult"]`).value = existItem.quantityAdult;
         boxTourDetail.querySelector(`[name="quantityChildren"]`).value = existItem.quantityChildren;
         boxTourDetail.querySelector(`[name="quantityBaby"]`).value = existItem.quantityBaby;
