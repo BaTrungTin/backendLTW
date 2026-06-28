@@ -347,6 +347,7 @@ if (tourCreateForm) {
       const stockChildren = event.target.stockChildren.value;
       const stockBaby = event.target.stockBaby.value;
       const locations = [];
+      const destinations = [];
       const time = event.target.time.value;
       const vehicle = event.target.vehicle.value;
       const departureDate = event.target.departureDate.value;
@@ -361,6 +362,13 @@ if (tourCreateForm) {
         }
       })
       // End Locations
+
+      const listInputDestination = tourCreateForm.querySelectorAll(`input[name="destination"]`);
+      listInputDestination.forEach(input => {
+        if (input.checked) {
+          destinations.push(input.value);
+        }
+      })
 
       // Schedules 
       const listScheduleItem = tourCreateForm.querySelectorAll(".inner-schedule-item");
@@ -397,6 +405,7 @@ if (tourCreateForm) {
       formData.append("stockChildren", stockChildren);
       formData.append("stockBaby", stockBaby);
       formData.append("locations", JSON.stringify(locations));
+      formData.append("destination", JSON.stringify(destinations));
       formData.append("time", time);
       formData.append("vehicle", vehicle);
       formData.append("departureDate", departureDate);
@@ -459,6 +468,7 @@ if (tourEditForm) {
       const stockChildren = event.target.stockChildren.value;
       const stockBaby = event.target.stockBaby.value;
       const locations = [];
+      const destinations = [];
       const time = event.target.time.value;
       const vehicle = event.target.vehicle.value;
       const departureDate = event.target.departureDate.value;
@@ -473,6 +483,13 @@ if (tourEditForm) {
         }
       })
       // End Locations
+
+      const listInputDestination = tourEditForm.querySelectorAll(`input[name="destination"]`);
+      listInputDestination.forEach(input => {
+        if (input.checked) {
+          destinations.push(input.value);
+        }
+      })
 
       // Schedules 
       const listScheduleItem = tourEditForm.querySelectorAll(".inner-schedule-item");
@@ -509,6 +526,7 @@ if (tourEditForm) {
       formData.append("stockChildren", stockChildren);
       formData.append("stockBaby", stockBaby);
       formData.append("locations", JSON.stringify(locations));
+      formData.append("destination", JSON.stringify(destinations));
       formData.append("time", time);
       formData.append("vehicle", vehicle);
       formData.append("departureDate", departureDate);

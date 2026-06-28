@@ -7,14 +7,14 @@
       .inner-label Điểm đi
       select(name="locationFrom")
         option(value="") -- Chọn điểm đi --
-        each item in cityList
+        each item in (typeof cityListFrom !== 'undefined' ? cityListFrom : cityList)
           option(value=item.id) #{item.name}
     .inner-group
       .inner-label Điểm đến
       select(name="locationTo")
         option(value="") -- Chọn điểm đến --
-        each item in cityList
-          option(value=item.name) #{item.name}
+        each item in (typeof cityListTo !== 'undefined' ? cityListTo : cityList)
+          option(value=item.id) #{item.name}
     .inner-group
       .inner-label Ngày khởi hành
       input(

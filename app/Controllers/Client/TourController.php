@@ -6,6 +6,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
 use App\Helpers\CategoryHelper;
+use App\Models\Category;
 use App\Models\City;
 use App\Models\Tour;
 
@@ -23,6 +24,13 @@ class TourController
             return;
         }
 
+        if (!empty($tourDetail['category'])) {
+            $category = Category::findOne(['id' => $tourDetail['category'], 'deleted' => false]);
+            if ($category) {
+                View::share('navActiveSlug', $category['slug']);
+            }
+        }
+
         $breadcrumb = [];
         if (!empty($tourDetail['category'])) {
             $breadcrumb = CategoryHelper::getCategoryParent($tourDetail['category']);
@@ -38,6 +46,7 @@ class TourController
             $tourDetail['departureDateFormat'] = date('d/m/Y', strtotime($tourDetail['departureDate']));
         }
 
+        $tourDetail['cityList'] = [];
         if (!empty($tourDetail['locations'])) {
             $cityList = [];
             foreach ($tourDetail['locations'] as $cityId) {

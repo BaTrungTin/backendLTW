@@ -21,11 +21,16 @@ header.header
 
         ul
           li
-            a.active(href="/") Trang Chủ
+            a(class=(currentPath === '/' ? 'active' : undefined) href="/") Trang Chủ
 
           each item in categoryList
+            - var isParentActive = navActiveSlug === item.slug
+            if item.children && item.children.length
+              each itemChild in item.children
+                if navActiveSlug === itemChild.slug
+                  - isParentActive = true
             li.menu-item
-              a(href=`/category/${item.slug}`) #{item.name}
+              a(class=(isParentActive ? 'active' : undefined) href=`/category/${item.slug}`) #{item.name}
 
               if (item.children && item.children.length > 0)
                 i.fa-solid.fa-caret-down
@@ -33,7 +38,10 @@ header.header
                 ul.sub-menu
                   each itemChild in item.children
                     li
-                      a(href=`/category/${itemChild.slug}`) #{itemChild.name}
+                      a(
+                        class=(navActiveSlug === itemChild.slug ? 'active' : undefined)
+                        href=`/category/${itemChild.slug}`
+                        ) #{itemChild.name}
 
           li
             a(href="/#news") Tin Tức

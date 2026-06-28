@@ -67,6 +67,9 @@ class CategoryAdminController
     public function createPost(Request $request): void
     {
         $body = $request->body();
+        if (isset($body['name'])) {
+            $body['name'] = trim($body['name']);
+        }
         $slug = StrHelper::slugify($body['name']);
         if (Category::findOne(['slug' => $slug])) {
             $slug .= '-' . time();
@@ -104,6 +107,7 @@ class CategoryAdminController
     {
         $body = $request->body();
         if (!empty($body['name'])) {
+            $body['name'] = trim($body['name']);
             $slug = StrHelper::slugify($body['name']);
             $exist = Category::findOne(['slug' => $slug]);
             if ($exist && $exist['id'] != $request->params['id']) {

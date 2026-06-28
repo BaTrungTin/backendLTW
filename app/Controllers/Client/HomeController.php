@@ -7,6 +7,7 @@ use App\Core\View;
 use App\Helpers\CategoryHelper;
 use App\Helpers\TourHelper;
 use App\Models\Category;
+use App\Models\City;
 use App\Models\Tour;
 
 class HomeController
@@ -41,6 +42,26 @@ class HomeController
             ['sort' => ['position' => 'desc'], 'limit' => 8]
         ));
 
+        $hotCityList = [];
+        foreach (City::find([]) as $city) {
+            $tours = Tour::findByDestination((int) $city['id'], ['limit' => 1]);
+            $tourCount = Tour::countByDestination((int) $city['id']);
+            $hotCityList[] = array_merge($city, [
+                'tourCount' => $tourCount,
+                'avatar' => $tours[0]['avatar'] ?? '',
+            ]);
+        }
+        usort($hotCityList, fn ($a, $b) => $b['tourCount'] <=> $a['tourCount'] ?: strcmp($a['name'], $b['name']));
+        $hotCityList = array_values(array_filter($hotCityList, fn ($city) => $city['tourCount'] > 0));
+        if (empty($hotCityList)) {
+            $hotCityList = array_map(
+                fn ($city) => array_merge($city, ['tourCount' => 0, 'avatar' => '']),
+                array_slice(City::find([]), 0, 8)
+            );
+        } else {
+            $hotCityList = array_slice($hotCityList, 0, 8);
+        }
+
         View::render('client/pages/home', [
             'pageTitle' => 'Trang chủ',
             'tourListSection2' => $tourListSection2,
@@ -48,6 +69,7 @@ class HomeController
             'categorySection4' => $categorySection4,
             'tourListSection6' => $tourListSection6,
             'categorySection6' => $categorySection6,
+            'hotCityList' => $hotCityList,
         ]);
     }
 }
