@@ -110,9 +110,32 @@ button {
     align-items: center;
 }
 
-.header .inner-logo img {
-    width: auto;
+.header .inner-logo {
+    width: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header .inner-logo a {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+}
+
+.header .inner-logo a img {
+    width: 50px;
     height: 50px;
+}
+
+.header .inner-logo a span {
+    display: inline-block !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: normal !important;
 }
 
 .header .inner-menu>ul {
@@ -1520,6 +1543,29 @@ button {
     .footer .inner-bottom .inner-logo {
         order: 0;
     }
+
+    .inner-logo a {
+        display: flex;
+        align-items: center; /* căn giữa dọc */
+        gap: 12px;
+    }
+
+    .inner-logo img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        display: block;
+    }
+
+    .inner-logo span {
+        display: block;
+        line-height: 1;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        font-weight: 600;
+    }
+        
 
     .footer .inner-bottom .inner-links {
         order: 1;
