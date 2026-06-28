@@ -4,7 +4,7 @@ mixin box-breadcrumb(breadcrumb)
     .inner-image
       img(
         alt=lastItem.name
-        src=lastItem.avatar
+        src=(lastItem.avatar || settingWebsiteInfo.logo)
         )
     .inner-content
       .container

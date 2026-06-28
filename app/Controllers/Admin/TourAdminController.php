@@ -182,7 +182,7 @@ class TourAdminController
     private function parseTourBody(array $body): array
     {
         return [
-            'name' => $body['name'] ?? '',
+            'name' => trim($body['name'] ?? ''),
             'category' => $body['category'] ?? null,
             'position' => (int) ($body['position'] ?? Tour::count([]) + 1),
             'status' => $body['status'] ?? 'active',
@@ -196,10 +196,11 @@ class TourAdminController
             'stockChildren' => (int) ($body['stockChildren'] ?? 0),
             'stockBaby' => (int) ($body['stockBaby'] ?? 0),
             'locations' => !empty($body['locations']) ? json_decode($body['locations'], true) : [],
-            'time' => $body['time'] ?? '',
-            'vehicle' => $body['vehicle'] ?? '',
+            'destination' => !empty($body['destination']) ? json_decode($body['destination'], true) : [],
+            'time' => trim($body['time'] ?? ''),
+            'vehicle' => trim($body['vehicle'] ?? ''),
             'departureDate' => !empty($body['departureDate']) ? $body['departureDate'] : null,
-            'information' => $body['information'] ?? '',
+            'information' => trim($body['information'] ?? ''),
             'schedules' => !empty($body['schedules']) ? json_decode($body['schedules'], true) : [],
         ];
     }

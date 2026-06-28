@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS tours (
   stock_children INT DEFAULT 0,
   stock_baby INT DEFAULT 0,
   locations JSON,
+  destination JSON,
   time VARCHAR(100) DEFAULT '',
   vehicle VARCHAR(255) DEFAULT '',
   departure_date DATE DEFAULT NULL,
@@ -127,7 +128,7 @@ CREATE TABLE IF NOT EXISTS setting_website_info (
   phone VARCHAR(50) DEFAULT '',
   email VARCHAR(255) DEFAULT '',
   address TEXT,
-  logo VARCHAR(500) DEFAULT '/assets/images/logo.svg',
+  logo VARCHAR(500) DEFAULT '/assets/images/logo.png',
   favicon VARCHAR(500) DEFAULT '',
   category_id_section4 INT UNSIGNED DEFAULT NULL,
   category_id_section6 INT UNSIGNED DEFAULT NULL

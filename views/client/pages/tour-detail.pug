@@ -83,11 +83,12 @@ block main
                 i.fa-solid.fa-calendar-days
                 span Ngày Khởi Hành:
                 span.inner-hl #{tourDetail.departureDateFormat} 
-            .inner-group
-              .inner-label Khởi Hành Tại:
-              select(name="locationFrom")
-                each item in tourDetail.cityList
-                  option(value=item.id) #{item.name}
+            if tourDetail.cityList && tourDetail.cityList.length > 0
+              .inner-group
+                .inner-label Khởi Hành Tại:
+                select(name="locationFrom")
+                  each item in tourDetail.cityList
+                    option(value=item.id) #{item.name}
             .inner-group
               .inner-label Số Lượng Hành Khách
               .inner-list

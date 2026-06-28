@@ -1,7 +1,7 @@
 USE tour_db;
 
 INSERT INTO setting_website_info (website_name, phone, email, address, logo, favicon)
-VALUES ('Tour Travel', '0123456789', 'info@tour.local', 'TP.HCM', '/assets/images/logo.svg', '/assets/images/favicon.ico')
+VALUES ('Tour Travel', '0123456789', 'info@tour.local', 'TP.HCM', '/assets/images/logo.png', '/assets/images/logo.png')
 ON DUPLICATE KEY UPDATE website_name = website_name;
 
 INSERT INTO roles (name, description, permissions, deleted)
@@ -15,7 +15,8 @@ FROM roles r WHERE r.name = 'Super Admin' LIMIT 1
 ON DUPLICATE KEY UPDATE full_name = full_name;
 
 INSERT INTO cities (name) VALUES
-('Hà Nội'), ('TP.HCM'), ('Đà Nẵng'), ('Nha Trang'), ('Phú Quốc')
+('Hà Nội'), ('TP.HCM'), ('Đà Nẵng'), ('Nha Trang'), ('Phú Quốc'),
+('Nhật Bản'), ('Hàn Quốc'), ('Thái Lan'), ('Singapore'), ('Pháp'), ('Úc'), ('Mỹ')
 ON DUPLICATE KEY UPDATE name = VALUES(name);
 
 INSERT INTO categories (name, parent, position, status, slug) VALUES

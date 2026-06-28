@@ -5,7 +5,7 @@ namespace App\Models;
 class Tour extends BaseModel
 {
     protected static string $table = 'tours';
-    protected static array $jsonFields = ['images', 'locations', 'schedules'];
+    protected static array $jsonFields = ['images', 'locations', 'destination', 'schedules'];
 
     protected static function map(array $row): array
     {
@@ -27,6 +27,7 @@ class Tour extends BaseModel
             'stockChildren' => (int) $row['stock_children'],
             'stockBaby' => (int) $row['stock_baby'],
             'locations' => is_string($row['locations'] ?? null) ? json_decode($row['locations'], true) : ($row['locations'] ?? []),
+            'destination' => self::decodeIdList($row['destination'] ?? null),
             'time' => $row['time'],
             'vehicle' => $row['vehicle'],
             'departureDate' => $row['departure_date'],
@@ -61,9 +62,8 @@ class Tour extends BaseModel
             $params[] = json_encode((string) $query['locationFrom']);
         }
         if (!empty($query['locationTo'])) {
-            $keyword = \App\Helpers\StrHelper::slugify($query['locationTo']);
-            $sql .= ' AND slug LIKE ?';
-            $params[] = '%' . $keyword . '%';
+            $sql .= ' AND JSON_CONTAINS(destination, ?, "$")';
+            $params[] = json_encode((string) $query['locationTo']);
         }
         if (!empty($query['departureDate'])) {
             $sql .= ' AND departure_date = ?';
@@ -92,5 +92,47 @@ class Tour extends BaseModel
         $stmt = \App\Core\Database::pdo()->prepare($sql);
         $stmt->execute($params);
         return array_map([static::class, 'decodeRow'], $stmt->fetchAll());
+    }
+
+    public static function countByDestination(int $cityId): int
+    {
+        $sql = 'SELECT COUNT(*) FROM tours WHERE deleted = 0 AND status = ? AND JSON_CONTAINS(destination, ?, "$")';
+        $stmt = \App\Core\Database::pdo()->prepare($sql);
+        $stmt->execute(['active', json_encode((string) $cityId)]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public static function findByDestination(int $cityId, array $options = []): array
+    {
+        $sql = 'SELECT * FROM tours WHERE deleted = 0 AND status = ? AND JSON_CONTAINS(destination, ?, "$")';
+        $params = ['active', json_encode((string) $cityId)];
+        $sql .= ' ORDER BY position DESC';
+        if (!empty($options['limit'])) {
+            $sql .= ' LIMIT ' . (int) $options['limit'];
+        }
+        $stmt = \App\Core\Database::pdo()->prepare($sql);
+        $stmt->execute($params);
+        return array_map([static::class, 'decodeRow'], $stmt->fetchAll());
+    }
+
+    private static function decodeIdList(mixed $value): array
+    {
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                return array_values(array_map('strval', $decoded));
+            }
+            if (is_numeric($value)) {
+                return [(string) $value];
+            }
+            return [];
+        }
+        if (is_int($value) || is_float($value)) {
+            return [(string) $value];
+        }
+        if (is_array($value)) {
+            return array_values(array_map('strval', $value));
+        }
+        return [];
     }
 }

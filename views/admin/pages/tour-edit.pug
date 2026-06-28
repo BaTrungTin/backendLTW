@@ -85,7 +85,7 @@ block main
                         label(for="stockBaby") Em bé
                         input(type="number" id="stockBaby" name="stockBaby" value=tourDetail.stockBaby)
             .inner-group 
-                label(class="inner-label") Những địa điểm có tour
+                label(class="inner-label") Những địa điểm có tour (Điểm đi)
                 .inner-checkbox-list 
                     each item in cityList
                         .inner-checkbox-item 
@@ -98,6 +98,21 @@ block main
                                 )
                             label(
                                 for=`location-${item.id}`
+                                ) #{item.name}
+            .inner-group 
+                label(class="inner-label") Điểm đến (có thể chọn nhiều)
+                .inner-checkbox-list 
+                    each item in cityList
+                        .inner-checkbox-item 
+                            input(
+                                type="checkbox" 
+                                id=`destination-${item.id}` 
+                                name="destination" 
+                                value=item.id
+                                checked=(tourDetail.destination.map(String).includes(String(item.id)))
+                                )
+                            label(
+                                for=`destination-${item.id}`
                                 ) #{item.name}
             .inner-group 
                 label(for="time" class="inner-label") Thời gian

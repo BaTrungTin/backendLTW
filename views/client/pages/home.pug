@@ -21,20 +21,24 @@ block main
             data-aos="fade-up"
             )
             | Đây là nơi cung cấp thông tin chi tiết, hình ảnh hấp dẫn và lịch trình rõ ràng về các chuyến đi, giúp khách hàng dễ dàng khám phá, lựa chọn và đặt tour.
+          - const citiesJson = JSON.stringify(cityList.map((city) => ({ id: city.id, name: city.name })))
           form.inner-form(
             data-aos-delay="300" 
             data-aos-duration="800" 
             data-aos="fade-up" 
             action=""
             form-search
+            data-cities=citiesJson
             )
             .inner-box.inner-address
               .inner-input-group
                 img.inner-icon(src="/assets/images/icon-address.svg")
+                input(type="hidden" name="locationTo" value="")
                 input.inner-input(
                   placeholder="Bạn muốn đi đâu?" 
                   type="text"
-                  name="locationTo"
+                  data-role="locationToName"
+                  autocomplete="off"
                   )
                 i.fa-solid.fa-angle-down.inner-down
               // Khối suggest
@@ -43,42 +47,16 @@ block main
                   i.fa-solid.fa-location-dot
                   | Địa Điểm Hot
                 .inner-suggest-list
-                  .inner-item
-                    .inner-item-image
-                      img(
-                        alt="" 
-                        src="/assets/images/product-1.jpg"
-                        )
-                    .inner-item-content
-                      .inner-item-title Úc
-                      .inner-item-desc 50 tours
-                  .inner-item
-                    .inner-item-image
-                      img(
-                        alt="" 
-                        src="/assets/images/product-2.jpg"
-                        )
-                    .inner-item-content
-                      .inner-item-title Ấn Độ
-                      .inner-item-desc 50 tours
-                  .inner-item
-                    .inner-item-image
-                      img(
-                        alt="" 
-                        src="/assets/images/product-3.jpg"
-                        )
-                    .inner-item-content
-                      .inner-item-title Pháp
-                      .inner-item-desc 50 tours
-                  .inner-item
-                    .inner-item-image
-                      img(
-                        alt="" 
-                        src="/assets/images/product-4.jpg"
-                        )
-                    .inner-item-content
-                      .inner-item-title Singapore
-                      .inner-item-desc 50 tours
+                  each item in hotCityList
+                    .inner-item(data-city-id=item.id)
+                      .inner-item-image
+                        img(
+                          alt=item.name
+                          src=(item.avatar || settingWebsiteInfo.logo)
+                          )
+                      .inner-item-content
+                        .inner-item-title #{item.name}
+                        .inner-item-desc #{item.tourCount} tours
               // Hết khối suggest
             .inner-box.inner-user
               .inner-input-group

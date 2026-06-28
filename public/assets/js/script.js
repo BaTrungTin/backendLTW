@@ -28,29 +28,36 @@ if (buttonMenuMobile) {
 // Box Address Section 1
 const boxAddressSection1 = document.querySelector(".section-1 .inner-form .inner-address");
 if (boxAddressSection1) {
-    // Ẩn/hiện box suggest
-    const input = boxAddressSection1.querySelector(".inner-input");
+    const inputName = boxAddressSection1.querySelector('[data-role="locationToName"]');
+    const inputId = boxAddressSection1.querySelector('[name="locationTo"]');
 
-    input.addEventListener("focus", () => {
+    inputName.addEventListener("focus", () => {
         boxAddressSection1.classList.add("active");
     })
 
-    input.addEventListener("blur", () => {
+    inputName.addEventListener("blur", () => {
         boxAddressSection1.classList.remove("active");
     })
 
-    // Sự kiện click vào item
-    const listItem = boxAddressSection1.querySelectorAll(".inner-suggest-list  .inner-item")
-    if (listItem) {
-        listItem.forEach(item => {
-            item.addEventListener("mousedown", () => {
-                const title = item.querySelector(".inner-item-title").innerHTML.trim();
-                if (title) {
-                    input.value = title;
-                }
-            })
+    inputName.addEventListener("input", () => {
+        if (inputId) {
+            inputId.value = "";
+        }
+    })
+
+    const listItem = boxAddressSection1.querySelectorAll(".inner-suggest-list .inner-item")
+    listItem.forEach(item => {
+        item.addEventListener("mousedown", () => {
+            const title = item.querySelector(".inner-item-title")?.textContent.trim();
+            const cityId = item.getAttribute("data-city-id");
+            if (title && inputName) {
+                inputName.value = title;
+            }
+            if (cityId && inputId) {
+                inputId.value = cityId;
+            }
         })
-    }
+    })
 }
 // End Box Address Section 1
 
@@ -489,8 +496,6 @@ if (boxFilter) {
 // Form Search
 const formSearch = document.querySelector("[form-search]");
 if (formSearch) {
-    const url = new URL(`${window.location.origin}/search`);
-
     const filterList = [
         "locationTo",
         "departureDate",
@@ -499,11 +504,28 @@ if (formSearch) {
         "stockBaby",
     ];
 
-    formSearch.addEventListener("submit", (event) => {
-        event.preventDefault(); // Ngăn chặn hành vi mặc định là load lại trang
+    const resolveLocationToId = () => {
+        const locationIdInput = formSearch.querySelector('[name="locationTo"]');
+        const locationNameInput = formSearch.querySelector('[data-role="locationToName"]');
+        if (!locationIdInput || locationIdInput.value || !locationNameInput?.value.trim()) {
+            return;
+        }
 
+        const cities = JSON.parse(formSearch.getAttribute("data-cities") || "[]");
+        const keyword = locationNameInput.value.trim().toLowerCase();
+        const city = cities.find((item) => item.name.toLowerCase() === keyword);
+        if (city) {
+            locationIdInput.value = city.id;
+        }
+    };
+
+    formSearch.addEventListener("submit", (event) => {
+        event.preventDefault();
+        resolveLocationToId();
+
+        const url = new URL(`${window.location.origin}/search`);
         for (const item of filterList) {
-            const value = formSearch.querySelector(`[name="${item}"]`).value;
+            const value = formSearch.querySelector(`[name="${item}"]`)?.value;
             if (value) {
                 url.searchParams.set(item, value);
             } else {
